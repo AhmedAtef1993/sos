@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1059819211045",
+    "project_id": "acg-app-c07d9",
+    "storage_bucket": "acg-app-c07d9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059819211045:android:72dcccf0cabb3fe622b2cc",
+        "android_client_info": {
+          "package_name": "com.examble.s_o_s"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXd-9DnBMMLzzDbWosmEJbuG2nHQA1gxA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
