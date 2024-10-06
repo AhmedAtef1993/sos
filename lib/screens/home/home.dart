@@ -66,7 +66,7 @@ class _LocationNotificationPageState extends State<LocationNotificationPage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
-              onPressed: _sendNotification,
+              onPressed: _getCurrentLocation,
               child: const Text('Send Notification with Location'),
             ),
           ),

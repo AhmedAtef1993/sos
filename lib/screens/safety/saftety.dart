@@ -1,4 +1,252 @@
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
+
+// import 'package:flutter/material.dart';
+// import 'package:geolocator/geolocator.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+
+// class SafetyScreen extends StatelessWidget {
+//   const SafetyScreen({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       appBar: AppBar(
+//         title: const Text("Safety"),
+//       ),
+//       body: SafeArea(
+//         child: Padding(
+//           padding: const EdgeInsets.all(16),
+//           child: GridView.builder(
+//             itemCount: demoProducts.length,
+//             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+//               maxCrossAxisExtent: 200,
+//               childAspectRatio: 0.7,
+//               mainAxisSpacing: 20,
+//               crossAxisSpacing: 16,
+//             ),
+//             itemBuilder: (context, index) => ProductCard(
+//               product: demoProducts[index],
+//               onPress: () {
+//                 _showConfirmationDialog(context, demoProducts[index].title);
+//               },
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Future<void> sendEmail(
+//       String serviceTitle, String latitude, String longitude) async {
+//     final url = 'https://api.sendgrid.com/v3/mail/send'; // SendGrid API URL
+
+//     final headers = {
+//       'Authorization':
+//           'Bearer YOUR_SENDGRID_API_KEY', // Replace with your SendGrid API Key
+//       'Content-Type': 'application/json',
+//     };
+
+//     final body = jsonEncode({
+//       "personalizations": [
+//         {
+//           "to": [
+//             {"email": "allcare-egypt2@gmail.com"} // Recipient email
+//           ],
+//           "subject": "New Location Alert"
+//         }
+//       ],
+//       "from": {"email": "allcare-egypt2@gmail.com"}, // Your email
+//       "content": [
+//         {
+//           "type": "text/plain",
+//           "value":
+//               "New location received:\nService: $serviceTitle\nLatitude: $latitude\nLongitude: $longitude"
+//         }
+//       ]
+//     });
+
+//     final response = await http.post(
+//       Uri.parse(url),
+//       headers: headers,
+//       body: body,
+//     );
+
+//     if (response.statusCode == 202) {
+//       print("Email sent successfully!");
+//     } else {
+//       print("Failed to send email: ${response.body}");
+//     }
+//   }
+
+//   // Show the confirmation dialog, pass product title
+//   void _showConfirmationDialog(BuildContext context, String title) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: const Text("Confirmation"),
+//           content: const Text("Are you sure you want to proceed?"),
+//           actions: <Widget>[
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//               },
+//               child: const Text("Cancel"),
+//             ),
+//        TextButton(
+//   onPressed: () async {
+//     Navigator.of(context).pop();
+//     _showSnackBar(context, 'Your request has been sent');
+
+//     // Call to send the current location and get latitude and longitude
+//     Position position = await _sendCurrentLocation(context, title);
+
+//     // Send email after location is sent
+//     await sendEmail(title, position.latitude.toString(), position.longitude.toString());
+//   },
+//   child: const Text("Yes"),
+// ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+
+//   // Show the Snackbar
+//   void _showSnackBar(BuildContext context, String message) {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(
+//         content: Text(message),
+//         backgroundColor: Colors.green,
+//       ),
+//     );
+//   }
+
+//   // Send the current location after getting permission and save to Firebase with title
+//   Future<void> _sendCurrentLocation(BuildContext context, String title) async {
+//     // Check permissions first
+//     LocationPermission permission = await Geolocator.checkPermission();
+//     if (permission == LocationPermission.denied) {
+//       permission = await Geolocator.requestPermission();
+//     }
+
+//     // Get the current position
+//     if (permission == LocationPermission.always ||
+//         permission == LocationPermission.whileInUse) {
+//       Position position = await Geolocator.getCurrentPosition(
+//           desiredAccuracy: LocationAccuracy.high);
+
+//       // Generate Google Maps link
+//       String locationLink =
+//           "https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}";
+
+//       // Send location and title to Firestore
+//       await FirebaseFirestore.instance.collection('locations').add({
+//         'latitude': position.latitude,
+//         'longitude': position.longitude,
+//         'service': title, // Include the product title (service name)
+//         'timestamp': FieldValue.serverTimestamp(), // Save with server timestamp
+//       });
+
+//       _showSnackBar(context,
+//           'Location sent successfully! $locationLink'); // Show the location link in Snackbar
+//     } else {
+//       _showSnackBar(context, 'Location permission denied!');
+//     }
+//   }
+
+// }
+
+// class ProductCard extends StatelessWidget {
+//   const ProductCard({
+//     super.key,
+//     this.width = 140,
+//     this.aspectRetio = 1.02,
+//     required this.product,
+//     required this.onPress,
+//   });
+
+//   final double width, aspectRetio;
+//   final Product product;
+//   final VoidCallback onPress;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizedBox(
+//       width: width,
+//       child: GestureDetector(
+//         onTap: onPress,
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             AspectRatio(
+//               aspectRatio: 1.02,
+//               child: Container(
+//                 padding: const EdgeInsets.all(20),
+//                 decoration: BoxDecoration(
+//                   color: const Color(0xFF979797).withOpacity(0.1),
+//                   borderRadius: BorderRadius.circular(12),
+//                 ),
+//                 child: Image.asset(product.images),
+//               ),
+//             ),
+//             const SizedBox(height: 8),
+//             Text(
+//               product.title,
+//               style: const TextStyle(
+//                   fontFamily: 'GothamBook', fontWeight: FontWeight.bold),
+//               maxLines: 2,
+//             ),
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 InkWell(
+//                   borderRadius: BorderRadius.circular(50),
+//                   onTap: onPress, // Trigger the confirmation dialog here
+//                   child: Container(
+//                     padding: const EdgeInsets.all(6),
+//                     height: 24,
+//                     width: 24,
+//                     decoration: const BoxDecoration(),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class Product {
+//   final String title;
+//   final String images;
+
+//   Product({
+//     required this.images,
+//     required this.title,
+//   });
+// }
+
+// List<Product> demoProducts = [
+//   Product(
+//     images: "assets/image/firefighter.png",
+//     title: "Firefighter",
+//   ),
+//   Product(
+//     images: "assets/image/escort_car.png",
+//     title: "Escort Service",
+//   ),
+// ];
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SafetyScreen extends StatelessWidget {
   const SafetyScreen({super.key});
@@ -24,7 +272,7 @@ class SafetyScreen extends StatelessWidget {
             itemBuilder: (context, index) => ProductCard(
               product: demoProducts[index],
               onPress: () {
-                _showConfirmationDialog(context);
+                _showConfirmationDialog(context, demoProducts[index].title);
               },
             ),
           ),
@@ -33,7 +281,8 @@ class SafetyScreen extends StatelessWidget {
     );
   }
 
-  void _showConfirmationDialog(BuildContext context) {
+  // Show the confirmation dialog, pass product title
+  void _showConfirmationDialog(BuildContext context, String title) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -43,14 +292,26 @@ class SafetyScreen extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text("Cancel"),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                // Add the action you want to perform here
+              onPressed: () async {
+                Navigator.of(context).pop();
+                _showSnackBar(context, 'Your request has been sent');
+
+                // Call to send the current location and get latitude and longitude
+                try {
+                  Position position =
+                      await _sendCurrentLocation(context, title);
+                  // Send email after location is sent
+                  await sendEmail(title, position.latitude.toString(),
+                      position.longitude.toString());
+                } catch (e) {
+                  _showSnackBar(
+                      context, 'Failed to send location: ${e.toString()}');
+                }
               },
               child: const Text("Yes"),
             ),
@@ -58,6 +319,97 @@ class SafetyScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  // Show the Snackbar
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  // Function to send an email using SendGrid API
+  Future<void> sendEmail(
+      String serviceTitle, String latitude, String longitude) async {
+    final url = 'https://api.sendgrid.com/v3/mail/send'; // SendGrid API URL
+
+    final headers = {
+      'Authorization':
+          'Bearer YOUR_SENDGRID_API_KEY', // Replace with your SendGrid API Key
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      "personalizations": [
+        {
+          "to": [
+            {"email": "allcare-egypt2@gmail.com"} // Recipient email
+          ],
+          "subject": "New Location Alert"
+        }
+      ],
+      "from": {"email": "allcare-egypt2@gmail.com"},
+      "content": [
+        {
+          "type": "text/plain",
+          "value":
+              "New location received:\nService: $serviceTitle\nLatitude: $latitude\nLongitude: $longitude"
+        }
+      ]
+    });
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: body,
+    );
+
+    if (response.statusCode == 202) {
+      print("Email sent successfully!");
+    } else {
+      print("Failed to send email: ${response.body}");
+    }
+  }
+
+  // Send the current location after getting permission and save to Firebase with title
+  Future<Position> _sendCurrentLocation(
+      BuildContext context, String title) async {
+    // Check permissions first
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    // Get the current position
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+
+      // Generate Google Maps link
+      String locationLink =
+          "https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}";
+
+      // Send location and title to Firestore
+      await FirebaseFirestore.instance.collection('locations').add({
+        'latitude': position.latitude,
+        'longitude': position.longitude,
+        'service': title, // Include the product title (service name)
+        'timestamp': FieldValue.serverTimestamp(), // Save with server timestamp
+      });
+
+      _showSnackBar(context,
+          'Location sent successfully! $locationLink'); // Show the location link in Snackbar
+
+      // Return position for use in sending email
+      return position; // Return the Position object
+    } else {
+      _showSnackBar(context, 'Location permission denied!');
+      throw Exception('Location permission denied!');
+    }
   }
 }
 
@@ -97,7 +449,8 @@ class ProductCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               product.title,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: const TextStyle(
+                  fontFamily: 'GothamBook', fontWeight: FontWeight.bold),
               maxLines: 2,
             ),
             Row(
@@ -105,7 +458,7 @@ class ProductCard extends StatelessWidget {
               children: [
                 InkWell(
                   borderRadius: BorderRadius.circular(50),
-                  onTap: onPress, // Modified here
+                  onTap: onPress, // Trigger the confirmation dialog here
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     height: 24,
@@ -134,11 +487,11 @@ class Product {
 
 List<Product> demoProducts = [
   Product(
-    images: "image/firefighter.png",
+    images: "assets/image/firefighter.png",
     title: "Firefighter",
   ),
   Product(
-    images: "image/escort_car.png",
+    images: "assets/image/escort_car.png",
     title: "Escort Service",
   ),
 ];

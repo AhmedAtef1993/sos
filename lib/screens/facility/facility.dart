@@ -33,6 +33,15 @@ class FacilityScreen extends StatelessWidget {
     );
   }
 
+  void _showSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Your request has been sent!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
   void _showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -49,8 +58,8 @@ class FacilityScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                // Add the action you want to perform here
+                Navigator.of(context).pop();
+                _showSnackBar(context);
               },
               child: const Text("Yes"),
             ),
@@ -81,7 +90,7 @@ class ProductCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onPress,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AspectRatio(
               aspectRatio: 1.02,
@@ -97,7 +106,7 @@ class ProductCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               product.title,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: TextStyle(fontSize: 20),
               maxLines: 2,
             ),
             Row(
@@ -134,19 +143,19 @@ class Product {
 
 List<Product> demoProducts = [
   Product(
-    images: "image/carpenter.png",
+    images: "assets/image/carpenter.png",
     title: "Carpenter",
   ),
   Product(
-    images: "image/electrician.png",
+    images: "assets/image/electrician.png",
     title: "Electrician",
   ),
   Product(
-    images: "image/plumber.png",
+    images: "assets/image/plumber.png",
     title: "Plumber",
   ),
   Product(
-    images: "image/driver.png",
+    images: "assets/image/driver.png",
     title: "Executive Driver",
   ),
 ];

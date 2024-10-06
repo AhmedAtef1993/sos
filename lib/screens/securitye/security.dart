@@ -33,6 +33,15 @@ class SecurityScreen extends StatelessWidget {
     );
   }
 
+  void _showSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Your request has been sent!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
   void _showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -43,7 +52,9 @@ class SecurityScreen extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
+
+                // Close the dialog
               },
               child: const Text("Cancel"),
             ),
@@ -51,6 +62,8 @@ class SecurityScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
                 // Add the action you want to perform here
+
+                _showSnackBar(context);
               },
               child: const Text("Yes"),
             ),
@@ -134,7 +147,7 @@ class Product {
 
 List<Product> demoProducts = [
   Product(
-    images: "image/guard.png",
+    images: "assets/image/guard.png",
     title: "Human Guard",
   ),
 ];

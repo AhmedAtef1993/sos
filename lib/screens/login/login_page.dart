@@ -53,80 +53,87 @@ class _SignInFormState extends State<SignInForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          TextFormField(
-            controller: _userNameController,
-            onSaved: (value) {
-              _email = value;
-            },
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              hintText: "User Name",
-              floatingLabelBehavior: FloatingLabelBehavior.auto,
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Password Field
-          TextFormField(
-            controller: _passwordController,
-            obscureText: _obscureText,
-            onSaved: (value) {
-              _password = value;
-            },
-            decoration: InputDecoration(
-              hintText: "Password",
-              floatingLabelBehavior: FloatingLabelBehavior.auto,
-              suffixIcon: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _obscureText = !_obscureText;
-                  });
+    return Scaffold(
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _userNameController,
+                onSaved: (value) {
+                  _email = value;
                 },
-                child: _obscureText
-                    ? const Icon(Icons.visibility_off, color: Color(0xFF868686))
-                    : const Icon(Icons.visibility, color: Color(0xFF868686)),
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  hintText: "User Name",
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-          // Forget Password
-          GestureDetector(
-            onTap: () {},
-            child: Text(
-              "Forget Password?",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(fontWeight: FontWeight.w500),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Sign In Button
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                _signIn(); // Call sign-in method
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF22A45D),
-              foregroundColor: Colors.white,
-              minimumSize: const Size(double.infinity, 40),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+              // Password Field
+              TextFormField(
+                controller: _passwordController,
+                obscureText: _obscureText,
+                onSaved: (value) {
+                  _password = value;
+                },
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                    child: _obscureText
+                        ? const Icon(Icons.visibility_off,
+                            color: Color(0xFF868686))
+                        : const Icon(Icons.visibility,
+                            color: Color(0xFF868686)),
+                  ),
+                ),
               ),
-            ),
-            child: const Text("Sign in"),
+              const SizedBox(height: 16),
+
+              // Forget Password
+              GestureDetector(
+                onTap: () {},
+                child: Text(
+                  "Forget Password?",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontWeight: FontWeight.w500),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Sign In Button
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    _signIn(); // Call sign-in method
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF22A45D),
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text("Sign in"),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
