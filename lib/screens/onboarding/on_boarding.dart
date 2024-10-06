@@ -18,7 +18,7 @@
 //             Expanded(
 //               flex: 14,
 //               child: Hero(tag: context,
-                
+
 //                 child: GestureDetector(
 //                   onTap: (){
 //                        Navigator.of(context).push(
@@ -29,15 +29,13 @@
 //                   },
 //                   child: Image.asset("image/allcare.png" , fit: BoxFit.scaleDown))),
 //             ),
- 
-      
+
 //           ],
 //         ),
 //       ),
 //     );
 //   }
 // }
-
 
 import 'package:flutter/material.dart';
 import 'package:s_o_s/screens/login/login_page.dart';
@@ -63,11 +61,12 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     // Initialize the AnimationController
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3), // Animation duration
+      duration: const Duration(seconds: 2), // Animation duration
     );
 
     // Define the sliding animation to move the image from down to up
-    _slideAnimation = Tween<Offset>(begin: Offset(0, 1), end: Offset(0, 0))
+    _slideAnimation = Tween<Offset>(
+            begin: const Offset(0, 1), end: const Offset(0, 0))
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     // Define the scaling animation from 0.5 to 1.0
@@ -135,4 +134,3 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
   }
 }
-

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:s_o_s/screens/home/home.dart';
+import 'package:s_o_s/screens/home/notfication.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -137,7 +137,7 @@ class _SignInFormState extends State<SignInForm> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => LocationNotificationPage()),
+                    builder: (context) => const LocationFirebaseScreen()),
               );
 
               // if (_formKey.currentState!.validate()) {

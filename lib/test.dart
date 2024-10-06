@@ -1,16 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class homme extends StatefulWidget {
-  const homme({super.key});
-
-  @override
-  State<homme> createState() => _hommeState();
+void main() {
+  runApp(const MyApp());
 }
 
-class _hommeState extends State<homme> {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return   GoogleMap( initialCameraPosition: CameraPosition(target:  LatLng(2555, 0)),);
+    return MaterialApp(
+      title: 'SOS Button Example',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Modern SOS Button'),
+        ),
+        body: const Center(
+          child: SOSButton(),
+        ),
+      ),
+    );
+  }
+}
+
+class SOSButton extends StatelessWidget {
+  const SOSButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        // Define your SOS action here
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('SOS button pressed!')),
+        );
+      },
+      style: ButtonStyle(
+        backgroundColor:
+            WidgetStateProperty.all(Colors.red), // Background color
+        foregroundColor: WidgetStateProperty.all(Colors.white), // Text color
+        padding: WidgetStateProperty.all(const EdgeInsets.symmetric(
+            horizontal: 40, vertical: 20)), // Padding
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0), // Rounded corners
+          ),
+        ),
+        elevation: WidgetStateProperty.all(8), // Shadow effect
+      ),
+      child: const Text(
+        'SOS',
+        style: TextStyle(
+          fontSize: 24, // Font size
+          fontWeight: FontWeight.bold, // Font weight
+        ),
+      ),
+    );
   }
 }
