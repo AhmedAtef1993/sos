@@ -1,62 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:s_o_s/screens/home/notfication.dart';
-
-class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  WelcomeText(
-                    title: "Welcome",
-                    text: "Plaese enter data that you received from SOR ",
-                  ),
-                  SignInForm(),
-                  SizedBox(height: 16),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class WelcomeText extends StatelessWidget {
-  final String title, text;
-
-  const WelcomeText({super.key, required this.title, required this.text});
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(height: 16),
-        Text(
-          title,
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge!
-              .copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 16 / 2),
-        Text(text, style: const TextStyle(color: Color(0xFF868686))),
-        const SizedBox(height: 24),
-      ],
-    );
-  }
-}
 
 class SignInForm extends StatefulWidget {
   const SignInForm({super.key});
@@ -67,8 +11,45 @@ class SignInForm extends StatefulWidget {
 
 class _SignInFormState extends State<SignInForm> {
   final _formKey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
+
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   bool _obscureText = true;
+  String? _email, _password;
+
+  // Method to show a snackbar
+  void _showSnackbar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+      ),
+    );
+  }
+
+  Future<void> _signIn() async {
+    try {
+      // Attempt to sign in with email and password
+      await _auth.signInWithEmailAndPassword(
+          email: _email!, password: _password!);
+      // Show success snackbar
+      _showSnackbar('Login successful!', Colors.green);
+
+      // Navigate to the next page after successful login
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                const LocationFirebaseScreen()), // Replace with your actual screen
+      );
+    } catch (e) {
+      // Show error snackbar if login fails
+      _showSnackbar(
+          'Login failed: Incorrect username or password.', Colors.red);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,33 +58,29 @@ class _SignInFormState extends State<SignInForm> {
       child: Column(
         children: [
           TextFormField(
-            onSaved: (value) {},
+            controller: _userNameController,
+            onSaved: (value) {
+              _email = value;
+            },
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(
               hintText: "User Name",
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFFF3F2F2)),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFFF3F2F2)),
-              ),
+              floatingLabelBehavior: FloatingLabelBehavior.auto,
             ),
           ),
           const SizedBox(height: 16),
 
           // Password Field
           TextFormField(
+            controller: _passwordController,
             obscureText: _obscureText,
-            onSaved: (value) {},
+            onSaved: (value) {
+              _password = value;
+            },
             decoration: InputDecoration(
               hintText: "Password",
-              border: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFFF3F2F2)),
-              ),
-              enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFFF3F2F2)),
-              ),
+              floatingLabelBehavior: FloatingLabelBehavior.auto,
               suffixIcon: GestureDetector(
                 onTap: () {
                   setState(() {
@@ -134,15 +111,10 @@ class _SignInFormState extends State<SignInForm> {
           // Sign In Button
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const LocationFirebaseScreen()),
-              );
-
-              // if (_formKey.currentState!.validate()) {
-              //   _formKey.currentState!.save();
-              // }
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
+                _signIn(); // Call sign-in method
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF22A45D),
@@ -157,5 +129,12 @@ class _SignInFormState extends State<SignInForm> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _userNameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

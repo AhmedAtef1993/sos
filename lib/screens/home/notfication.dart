@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:s_o_s/screens/company/services.dart';
+import 'package:s_o_s/screens/company/button_widget.dart';
 
 class LocationFirebaseScreen extends StatefulWidget {
   const LocationFirebaseScreen({super.key});

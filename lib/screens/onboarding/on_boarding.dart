@@ -86,7 +86,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
         // Move to the next screen when the animation ends
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const SignInScreen(),
+            builder: (context) => const SignInForm(),
           ),
         );
       }

@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:s_o_s/screens/company/services.dart';
-import 'package:s_o_s/screens/onboarding/on_boarding.dart';
+import 'package:s_o_s/screens/login/signin_screen.dart';
 
 import 'firebase_options.dart';
 
@@ -25,6 +24,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const OnboardingScreen());
+        home: const SignInScreen());
   }
 }
