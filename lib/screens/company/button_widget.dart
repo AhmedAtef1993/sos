@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:s_o_s/screens/facility/facility.dart';
 import 'package:s_o_s/screens/medical/medical.dart';
-import 'package:s_o_s/screens/safety/saftety.dart';
+import 'package:s_o_s/screens/safety/safety.dart';
 import 'package:s_o_s/screens/securitye/security.dart';
 import 'package:s_o_s/widget/button.dart';
 

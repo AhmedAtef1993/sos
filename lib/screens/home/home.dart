@@ -13,6 +13,7 @@ class LocationNotificationPage extends StatefulWidget {
 }
 
 class _LocationNotificationPageState extends State<LocationNotificationPage> {
+  // ignore: unused_field
   GoogleMapController? _mapController;
   LatLng _currentPosition = const LatLng(0, 0);
 

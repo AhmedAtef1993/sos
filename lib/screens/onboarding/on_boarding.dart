@@ -61,7 +61,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     // Initialize the AnimationController
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2), // Animation duration
+      duration: const Duration(seconds: 3), // Animation duration
     );
 
     // Define the sliding animation to move the image from down to up

@@ -333,7 +333,10 @@ class SafetyScreen extends StatelessWidget {
 
   // Function to send an email using SendGrid API
   Future<void> sendEmail(
-      String serviceTitle, String latitude, String longitude) async {
+    String serviceTitle,
+    String latitude,
+    String longitude,
+  ) async {
     final url = 'https://api.sendgrid.com/v3/mail/send'; // SendGrid API URL
 
     final headers = {
