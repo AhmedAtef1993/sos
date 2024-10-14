@@ -35,8 +35,8 @@ class FacilityScreen extends StatelessWidget {
 
   void _showSnackBar(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Your request has been sent!'),
+      const SnackBar(
+        content: Text('Your request has been sent!'),
         backgroundColor: Colors.green,
       ),
     );
